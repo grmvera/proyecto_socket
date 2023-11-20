@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      text-align: center;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      width: 200px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+
+  <div class="container">
+
+    <h1>Bienvenido al chat grupal</h1>
+    <form action="" method="post">
+    <input type="text" placeholder="Ingresa tu nombre" id="nombreUsuario">
+    <button onclick="unirseAlChat()">Unirse al chat</button>
+  </div>
+
+  <script>
+    import { io } from "socket.io-client";
+
+const URL = "http://localhost:3000";
+const socket = io(URL, { autoConnect: false });
+
+
+export default socket;
+    function unirseAlChat() {
+      var nombreUsuario = document.getElementById("nombreUsuario").value;
+      // Aquí puedes agregar la lógica para unirse al chat
+      // Por ejemplo, puedes redirigir al usuario a la página del chat
+      // o realizar alguna otra acción con el nombre del usuario ingresado
+    }
+  </script>
+</form>
+{% endblock %}

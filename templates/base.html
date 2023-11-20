@@ -3,13 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
     <title>Chat Rooms</title>
 </head>
 <body>
     <div>
         <h1>Bienvenido a la sala de chats</h1>
-        <p>Ingresa tu nombre de usuario</p>
-        <input type="text" id="nombreUsuario">
+        <main>
+            {% block content %}{% endblock %}
+        </main>
     </div>
 </body>
 </html>
