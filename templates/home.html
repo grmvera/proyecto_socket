@@ -32,24 +32,17 @@
 
     <h1>Bienvenido al chat grupal</h1>
     <form action="" method="post">
-    <input type="text" placeholder="Ingresa tu nombre" id="nombreUsuario">
-    <button onclick="unirseAlChat()">Unirse al chat</button>
+    <input type="text" placeholder="Ingresa tu nombre" id="nombreUsuario" name="name">
+    <input type="text" placeholder="Ingresa el canal a unirse/crear" id="nombreRoom" name="code">
+    <button type="submit" name="join">Unirse al chat</button>
+    <button type="submit" name="create">Crear chat</button>
+  </form>
+  {% if error %}
+  <ul>
+    <li>{{error}}</li>
+  </ul>
+  {% endif %}
   </div>
 
-  <script>
-    import { io } from "socket.io-client";
 
-const URL = "http://localhost:3000";
-const socket = io(URL, { autoConnect: false });
-
-
-export default socket;
-    function unirseAlChat() {
-      var nombreUsuario = document.getElementById("nombreUsuario").value;
-      // Aquí puedes agregar la lógica para unirse al chat
-      // Por ejemplo, puedes redirigir al usuario a la página del chat
-      // o realizar alguna otra acción con el nombre del usuario ingresado
-    }
-  </script>
-</form>
 {% endblock %}

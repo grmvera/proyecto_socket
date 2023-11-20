@@ -1,13 +1,79 @@
 {% extends "base.html" %}
 {% block content %}
+<style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
 
-    <section>
-        <textarea name="" id="" cols="30" rows="10"></textarea>
-        <input type="text" name="" id="">
-        <button type="button">
-insertar emoji
-        </button>
-        <button type="button">
+    .container {
+      text-align: center;
+    }
+</style>
+<section>
+    <div class="container">
+
+        <h2>CHAT ROOM: {{code}}</h2>
+        <div id="messages" class="messages"></div>
+        <div class="inputs">
+            <form method="post">
+                <textarea type="text" placeholder="empieza a chatear" name="messageInput" id="messageInput"></textarea>
+        </form>
+        <button type="button" onclick="sendMsg()">
             enviar
         </button>
-    </section>
+    </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+    
+    // socket server comunication
+    var socketio = io();
+    const msgs = document.getElementById("messages");
+    const createMsg = (name, msg) => {
+        let content = `
+        <div class="text">
+    <span>
+        <strong>${name}</strong>: ${msg}
+    </span>
+    <span class="muted"> ${new Date().toLocaleString()}</span>
+</div> `;
+        msgs.innerHTML += content;
+    }
+
+    socketio.on("message", (data) => {
+        createMsg(data.name, data.message)
+    });
+
+    const sendMsg = () => {
+        // deprecated
+        // const message = document.getElementById("messageInput")
+        const message =tinymce.get("messageInput").getContent({ format: "text" });
+        if (message == "") return;
+        socketio.emit("message", { data: message });
+        tinymce.get('messageInput').setContent("");
+        // deprecated
+        // message.value = "";
+
+    }
+
+    // emoji icon with tinymce
+    tinymce.init({
+        selector: "#messageInput",
+        plugins: "emoticons",
+        toolbar: "emoticons",
+        toolbar_location: "bottom",
+        menubar: false,
+        height: 200,
+    width: 1050
+    });
+</script>
+{% for msg in messages %}
+<script type="text/javascript">
+    createMsg("{{msg.name}}", "{{msg.message}}")
+</script>
+{% endfor %}
+{% endblock %}
