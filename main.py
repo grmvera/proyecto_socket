@@ -30,17 +30,17 @@ def home():
         create = request.form.get("create", False)
 
         if not name:
-            return render_template("home.html", error="Please enter a name.", code=code, name=name)
+            return render_template("home.html", error="Por favor ingrese un nombre", code=code, name=name)
 
         if join != False and not code:
-            return render_template("home.html", error="Please enter a room code.", code=code, name=name)
+            return render_template("home.html", error="Por favor introduzca un código de habitación", code=code, name=name)
         
         room = code
         if create != False:
             room = generate_unique_code(4)
             rooms[room] = {"members": 0, "messages": []}
         elif code not in rooms:
-            return render_template("home.html", error="Room does not exist.", code=code, name=name)
+            return render_template("home.html", error="La habitación no existe.", code=code, name=name)
         
         session["room"] = room
         session["name"] = name
@@ -81,7 +81,7 @@ def connect(auth):
         return
     
     join_room(room)
-    send({"name": name, "message": "has entered the room"}, to=room)
+    send({"name": name, "message": "ha entrado en la habitación"}, to=room)
     rooms[room]["members"] += 1
     print(f"{name} joined room {room}")
 
@@ -96,7 +96,7 @@ def disconnect():
         if rooms[room]["members"] <= 0:
             del rooms[room]
     
-    send({"name": name, "message": "has left the room"}, to=room)
+    send({"name": name, "message": "ha salido de la habitación"}, to=room)
     print(f"{name} has left the room {room}")
 
 if __name__ == "__main__":
