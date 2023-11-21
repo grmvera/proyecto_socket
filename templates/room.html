@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        font-family: 'Arial', sans-serif; /* Cambiar la fuente a una que te guste */
+        font-size: 23px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 255, 0.5); /* Sombra de color azul */
+        background-image: url('../static/img/UB.jpg'); /* Ruta de tu imagen de fondo */
+        background-size:450px; /* Ajusta el tamaño de la imagen al cuerpo */
+      }
+      
+
+    .container {
+      text-align: center;
+    }
+
+    .message-form {
+        border: 2px solid #00008B; /* Define el borde azul oscuro */
+        border-radius: 6px;
+        padding: 10px; /* Añade un espacio interno para separar el contenido del borde */
+    }
+    
+    .message-form button {
+        background-color: #00008B;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        cursor: pointer;
+        border-radius: 7px;
+    }
+
+    .blue-background {
+        background-color: #ADD8E6; /* Define el color azul claro */
+        /* Otras propiedades si es necesario */
+        border-radius: 7px;
+
+    }
+    
+    
+</style>
+<section class="blue-background">
+    <div class="container">
+        <h2>CHAT ROOM: {{code}}</h2>
+        <div id="messages" class="messages"></div>
+        <div class="inputs">
+            <form method="post" class="message-form">
+                <textarea type="text" placeholder="Empieza a chatear" name="messageInput" id="messageInput"></textarea>
+                <button type="button" onclick="sendMsg()">
+                    Enviar
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+
+<script type="text/javascript">
+    
+    // socket server comunication
+    var socketio = io();
+    const msgs = document.getElementById("messages");
+    const createMsg = (name, msg) => {
+        let content = `
+        <div class="text">
+    <span>
+        <strong>${name}</strong>: ${msg}
+    </span>
+    <span class="muted"> ${new Date().toLocaleString()}</span>
+</div> `;
+        msgs.innerHTML += content;
+    }
+
+    socketio.on("message", (data) => {
+        createMsg(data.name, data.message)
+    });
+
+    const sendMsg = () => {
+        // deprecated
+        // const message = document.getElementById("messageInput")
+        const message =tinymce.get("messageInput").getContent({ format: "text" });
+        if (message == "") return;
+        socketio.emit("message", { data: message });
+        tinymce.get('messageInput').setContent("");
+        // deprecated
+        // message.value = "";
+
+    }
+
+    // emoji icon with tinymce
+    tinymce.init({
+        selector: "#messageInput",
+        plugins: "emoticons",
+        toolbar: "emoticons",
+        toolbar_location: "bottom",
+        menubar: false,
+        height: 200,
+    width: 1050
+    });
+</script>
+{% for msg in messages %}
+<script type="text/javascript">
+    createMsg("{{msg.name}}", "{{msg.message}}")
+</script>
+{% endfor %}
+{% endblock %}
